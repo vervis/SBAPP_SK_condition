@@ -1,2 +1,258 @@
-# SBAPP_SK_condition
-Ecological condition mapping in the Succulent Karoo
+---
+title: "Condition mapping for Succulent Karoo"
+format: html
+editor: visual
+---
+
+# Hardeveld condition map
+
+Associated paper can be found here: <https://doi.org/10.1002/ldr.3900>
+
+```{r echo=FALSE, fig.height=4, fig.width=6, message=FALSE, warning=FALSE}
+# pacman allows easy load/install of packages 
+if(!"pacman" %in% installed.packages()) install.packages("pacman")
+
+# Load (and install) packages
+pacman::p_load(tidyverse, terra, sf)
+
+# Load archetype layer
+arch_hveld = rast('Bell_Hardeveld_2021/Hardeveld_archetype.tif')
+names(arch_hveld) = 'condition' #Rename variable for ggplot
+
+# Convert raster data to data frame
+arch_hveld_dat = arch_hveld %>% as.data.frame(xy = TRUE)
+
+# Plot map
+ggplot() +
+    geom_raster(data = arch_hveld_dat,
+                aes(x = x, y = y, fill = condition)) +
+    coord_sf(crs = st_crs(4326)) +
+    labs(
+      title = 'Hardeveld habitat condition archetype map',
+      x = "",
+      y = ""
+    )  +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = 'white'),
+          plot.title = element_text(size = 8, hjust = 0, 
+                                    margin = margin(0.1, 0, 0.1, 0, unit = "cm")),
+          axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(margin = margin(0, 0, 0, 0)),
+          plot.margin = unit(c(0, 0, 0, 0), "cm"),
+          legend.box.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.box.spacing = unit(0.1, "cm"),
+          legend.text = element_text(size = 6, 
+                                     margin = margin(0,0,0,0.1, unit = "cm")),
+          legend.key.height = unit(0.25, 'cm'),
+          legend.key.width = unit(0.1, 'cm'),
+          legend.title = element_text(size = 6),
+          legend.ticks = element_blank(),
+          panel.spacing = unit(0, "cm")) + 
+  scale_fill_gradientn(colours = 
+                          c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'),
+                         # c('#fd0a18','#fcfe00','#3fb000'),
+                       na.value = "white",
+                       name = 'Habitat condition value', 
+                       limits=c(0,1)) 
+```
+
+Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.
+
+Bell et al. (2021) further calculated what they termed "potential desertification classes" based on how many standard deviations archetype values were away from the mean archetype value for the study region. These can be thought of as "degradation" classes.
+
+```{r, echo=FALSE, fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+### Convert archetype map to desertification classes
+
+# Get mean archetype value
+arch_mean = global(arch_hveld, mean, na.rm = TRUE)
+
+# Get SD of archetype values
+arch_sd  = global(arch_hveld, sd, na.rm = TRUE)
+
+# Define reclassification matrix (columns: from, to, new value)
+reclass_matrix <- matrix(c(
+  0,    arch_mean$mean - 2 * arch_sd$sd,  1,
+  arch_mean$mean - 2 * arch_sd$sd, arch_mean$mean - 1 * arch_sd$sd,  2,
+  arch_mean$mean - 1 * arch_sd$sd, arch_mean$mean,  3,
+  arch_mean$mean, arch_mean$mean + 1 * arch_sd$sd,  4,
+  arch_mean$mean + 1 * arch_sd$sd, arch_mean$mean + 2 * arch_sd$sd,  5,
+  arch_mean$mean + 2 * arch_sd$sd, 1,     6
+), ncol = 3, byrow = TRUE)
+
+# Apply classification
+arch_hveld_classes <- classify(arch_hveld, reclass_matrix, include.lowest = T,
+                               filename = "Bell_Hardeveld_2021/Hardeveld_archetype_classes.tif", overwrite = T)
+
+# Convert raster data to data frame
+arch_hveld_class_dat = arch_hveld_classes %>% as.data.frame(xy = TRUE)
+
+# Plot
+ggplot() +
+    geom_raster(data = arch_hveld_class_dat,
+                aes(x = x, y = y, fill = as.factor(condition))) +
+    coord_sf(crs = st_crs(4326)) +
+    labs(
+      title = 'Potential desertification classes for the Hardeveld',
+      x = "",
+      y = ""
+    )  +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = 'white'),
+          plot.title = element_text(size = 8, hjust = 0, 
+                                    margin = margin(0.1, 0, 0.1, 0, unit = "cm")),
+          axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(margin = margin(0, 0, 0, 0)),
+          plot.margin = unit(c(0, 0, 0, 0), "cm"),
+          legend.box.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.box.spacing = unit(0.1, "cm"),
+          legend.text = element_text(size = 6, 
+                                     margin = margin(0,0,0,0.1, unit = "cm")),
+          legend.key.height = unit(0.25, 'cm'),
+          legend.key.width = unit(0.1, 'cm'),
+          legend.title = element_text(size = 6),
+          legend.ticks = element_blank(),
+          panel.spacing = unit(0, "cm")) + 
+  scale_fill_manual(values = rev(c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e')),
+                    labels = rev(c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average')),
+                       na.value = "white",
+                       name = 'Habitat condition class') 
+
+```
+
+Figure 2. Potential desertification classes for the Hardeveld.
+
+# Little Karoo condition map
+
+Associated paper can be found here: <https://doi.org/10.1016/j.jaridenv.2023.105066>
+
+```{r, echo=FALSE, fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+
+# Load archetype layer
+arch_lkaroo = rast('Kirsten_LittleKaroo_2021/LittleKaroo_archetype.tif')
+names(arch_lkaroo) = 'condition' #Rename variable for ggplot
+
+# Convert raster data to data frame
+arch_lkaroo_dat = arch_lkaroo %>% as.data.frame(xy = TRUE)
+
+# Plot map
+ggplot() +
+    geom_raster(data = arch_lkaroo_dat,
+                aes(x = x, y = y, fill = condition)) +
+    coord_sf(crs = st_crs(4326)) +
+    labs(
+      title = 'Little Karoo habitat condition archetype map',
+      x = "",
+      y = ""
+    )  +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = 'white'),
+          plot.title = element_text(size = 8, hjust = 0, 
+                                    margin = margin(0.1, 0, 0.1, 0, unit = "cm")),
+          axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(margin = margin(0, 0, 0, 0)),
+          plot.margin = unit(c(0, 0, 0, 0), "cm"),
+          legend.box.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.box.spacing = unit(0.1, "cm"),
+          legend.text = element_text(size = 6, 
+                                     margin = margin(0,0,0,0.1, unit = "cm")),
+          legend.key.height = unit(0.25, 'cm'),
+          legend.key.width = unit(0.1, 'cm'),
+          legend.title = element_text(size = 6),
+          legend.ticks = element_blank(),
+          panel.spacing = unit(0, "cm")) + 
+  scale_fill_gradientn(colours = 
+                          c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'),
+                       na.value = "white",
+                       name = 'Habitat condition value', 
+                       limits=c(0,1)) 
+```
+
+Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.
+
+We can then use the approach suggested by Bell et al. (2021) to derive "potential desertification classes".
+
+```{r, echo=FALSE, fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+### Convert archetype map to desertification classes
+
+# Get mean archetype value
+arch_mean_lk = global(arch_lkaroo, mean, na.rm = TRUE)
+
+# Get SD of archetype values
+arch_sd_lk  = global(arch_lkaroo, sd, na.rm = TRUE)
+
+# Define reclassification matrix (columns: from, to, new value)
+reclass_matrix_lk <- matrix(c(
+  0,    arch_mean_lk$mean - 2 * arch_sd_lk$sd,  1,
+  arch_mean_lk$mean - 2 * arch_sd_lk$sd, arch_mean_lk$mean - 1 * arch_sd_lk$sd,  2,
+  arch_mean_lk$mean - 1 * arch_sd_lk$sd, arch_mean_lk$mean,  3,
+  arch_mean_lk$mean, arch_mean_lk$mean + 1 * arch_sd_lk$sd,  4,
+  arch_mean_lk$mean + 1 * arch_sd_lk$sd, arch_mean_lk$mean + 2 * arch_sd_lk$sd,  5,
+  arch_mean_lk$mean + 2 * arch_sd_lk$sd, 1,     6
+), ncol = 3, byrow = TRUE)
+
+# Apply classification
+arch_lk_classes <- classify(arch_lkaroo, reclass_matrix_lk, include.lowest = T,
+                               filename = "Kirsten_LittleKaroo_2021/LittleKaroo_archetype_classes.tif", overwrite = T)
+
+# Convert raster data to data frame
+arch_lk_class_dat = arch_lk_classes %>% as.data.frame(xy = TRUE)
+
+# Plot
+ggplot() +
+    geom_raster(data = arch_lk_class_dat,
+                aes(x = x, y = y, fill = as.factor(condition))) +
+    coord_sf(crs = st_crs(4326)) +
+    labs(
+      title = 'Potential desertification classes for the Little Karoo',
+      x = "",
+      y = ""
+    )  +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = 'white'),
+          plot.title = element_text(size = 8, hjust = 0, 
+                                    margin = margin(0.1, 0, 0.1, 0, unit = "cm")),
+          axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(margin = margin(0, 0, 0, 0)),
+          plot.margin = unit(c(0, 0, 0, 0), "cm"),
+          legend.box.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.margin = margin(unit(c(0, 0, 0, 0), "cm")),
+          legend.box.spacing = unit(0.1, "cm"),
+          legend.text = element_text(size = 6, 
+                                     margin = margin(0,0,0,0.1, unit = "cm")),
+          legend.key.height = unit(0.25, 'cm'),
+          legend.key.width = unit(0.1, 'cm'),
+          legend.title = element_text(size = 6),
+          legend.ticks = element_blank(),
+          panel.spacing = unit(0, "cm")) + 
+  scale_fill_manual(values = rev(c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e')),
+                    labels = rev(c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average')),
+                       na.value = "white",
+                       name = 'Habitat condition class') 
+
+```
+
+Figure 4. Potential desertification classes for the Little Karoo.
+
+
+# License
+
+The data in this repository is licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. You are free to share and adapt the material, provided you give appropriate credit. For more details, see the [LICENSE](LICENSE.md) file.
