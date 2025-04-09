@@ -61,7 +61,7 @@ gg_arch_hveld = ggplot() +
                        limits=c(0,1)) 
 
 ggsave('Figure1_Hardeveld_condition.png', gg_arch_hveld, dpi=600,
-       width = 16, height = 16, units='cm')
+       width = 12, height = 12, units='cm')
 ```
 
 ![Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure1_Hardeveld_condition.png)
@@ -134,7 +134,7 @@ gg_arch_hveld_class =
                        name = 'Habitat condition class') 
 
 ggsave('Figure2_Hardeveld_condition_classes.png', gg_arch_hveld_class, dpi=600,
-       width = 16, height = 16, units='cm')
+       width = 12, height = 12, units='cm')
 ```
 ![Figure 2. Potential desertification classes for the Hardeveld.](Figure2_Hardeveld_condition_classes.png)
 
@@ -191,7 +191,7 @@ gg_arch_lkaroo =
                        limits=c(0,1)) 
 
 ggsave('Figure3_LittleKaroo_condition.png', gg_arch_lkaroo, dpi=600,
-       width = 16, height = 16, units='cm')
+       width = 12, height = 7, units='cm')
 ```
 ![Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure3_LittleKaroo_condition.png)
 
@@ -262,8 +262,8 @@ gg_arch_lk_class =
                        na.value = "white",
                        name = 'Habitat condition class') 
 
-ggsave('Figure4_LittleKaroo_condition_classes.png', gg_arch_lk_class, dpi=600,
-       width = 16, height = 16, units='cm')
+ggsave('Figures/Figure4_LittleKaroo_condition_classes.png', gg_arch_lk_class, dpi=600,
+       width = 12, height = 7, units='cm')
 ```
 ![Figure 4. Potential desertification classes for the Little Karoo.](Figure4_LittleKaroo_condition_classes.png)
 
