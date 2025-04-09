@@ -60,11 +60,11 @@ gg_arch_hveld = ggplot() +
                        name = 'Habitat condition value', 
                        limits=c(0,1)) 
 
-ggsave('Figure1_Hardeveld_condition.png', gg_arch_hveld, dpi=600,
+ggsave('Figures/Figure1_Hardeveld_condition.png', gg_arch_hveld, dpi=600,
        width = 12, height = 12, units='cm')
 ```
 
-![Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure1_Hardeveld_condition.png)
+![Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figures/Figure1_Hardeveld_condition.png)
 
 
 
@@ -133,10 +133,10 @@ gg_arch_hveld_class =
                        na.value = "white",
                        name = 'Habitat condition class') 
 
-ggsave('Figure2_Hardeveld_condition_classes.png', gg_arch_hveld_class, dpi=600,
+ggsave('Figures/Figure2_Hardeveld_condition_classes.png', gg_arch_hveld_class, dpi=600,
        width = 12, height = 12, units='cm')
 ```
-![Figure 2. Potential desertification classes for the Hardeveld.](Figure2_Hardeveld_condition_classes.png)
+![Figure 2. Potential desertification classes for the Hardeveld.](Figures/Figure2_Hardeveld_condition_classes.png)
 
 
 # Little Karoo condition map
@@ -190,10 +190,10 @@ gg_arch_lkaroo =
                        name = 'Habitat condition value', 
                        limits=c(0,1)) 
 
-ggsave('Figure3_LittleKaroo_condition.png', gg_arch_lkaroo, dpi=600,
+ggsave('Figures/Figure3_LittleKaroo_condition.png', gg_arch_lkaroo, dpi=600,
        width = 12, height = 7, units='cm')
 ```
-![Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure3_LittleKaroo_condition.png)
+![Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figures/Figure3_LittleKaroo_condition.png)
 
 
 We can then use the approach suggested by Bell et al. (2021) to derive "potential desertification classes".
@@ -265,7 +265,7 @@ gg_arch_lk_class =
 ggsave('Figures/Figure4_LittleKaroo_condition_classes.png', gg_arch_lk_class, dpi=600,
        width = 12, height = 7, units='cm')
 ```
-![Figure 4. Potential desertification classes for the Little Karoo.](Figure4_LittleKaroo_condition_classes.png)
+![Figure 4. Potential desertification classes for the Little Karoo.](Figures/Figure4_LittleKaroo_condition_classes.png)
 
 
 # License
