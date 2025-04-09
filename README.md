@@ -5,40 +5,34 @@
 
 Associated paper can be found here: <https://doi.org/10.1002/ldr.3900>
 
-![](README_files/figure-commonmark/unnamed-chunk-1-1.png)
-
-Figure 1. Habitat condition archetype map for the Hardeveld. A value of
-one represents 100% similarity to the non-degraded extreme of the
+![Figure 1. Habitat condition archetype map for the Hardeveld. A value
+of one represents 100% similarity to the non-degraded extreme of the
 habitat condition archetype while a value of zero represents 100%
-similarity to the degraded extreme.
+similarity to the degraded extreme.](Figure1_Hardeveld_condition.png)
 
 Bell et al. (2021) further calculated what they termed “potential
 desertification classes” based on how many standard deviations archetype
 values were away from the mean archetype value for the study region.
 These can be thought of as “degradation” classes.
 
-![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
-
-Figure 2. Potential desertification classes for the Hardeveld.
+![Figure 2. Potential desertification classes for the
+Hardeveld.](Figure2_Hardeveld_condition_classes.png)
 
 # Little Karoo condition map
 
 Associated paper can be found here:
 <https://doi.org/10.1016/j.jaridenv.2023.105066>
 
-![](README_files/figure-commonmark/unnamed-chunk-3-1.png)
-
-Figure 3. Habitat condition archetype map for the Little Karoo A value
+![Figure 3. Habitat condition archetype map for the Little Karoo A value
 of one represents 100% similarity to the non-degraded extreme of the
 habitat condition archetype while a value of zero represents 100%
-similarity to the degraded extreme.
+similarity to the degraded extreme.](Figure3_LittleKaroo_condition.png)
 
 We can then use the approach suggested by Bell et al. (2021) to derive
 “potential desertification classes”.
 
-![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
-
-Figure 4. Potential desertification classes for the Little Karoo.
+![Figure 4. Potential desertification classes for the Little
+Karoo.](Figure4_LittleKaroo_condition_classes.png)
 
 # License
 

@@ -1,6 +1,6 @@
 ---
 title: "Condition mapping for Succulent Karoo"
-format: html
+format: gfm
 editor: visual
 ---
 
@@ -23,7 +23,7 @@ names(arch_hveld) = 'condition' #Rename variable for ggplot
 arch_hveld_dat = arch_hveld %>% as.data.frame(xy = TRUE)
 
 # Plot map
-ggplot() +
+gg_arch_hveld = ggplot() +
     geom_raster(data = arch_hveld_dat,
                 aes(x = x, y = y, fill = condition)) +
     coord_sf(crs = st_crs(4326)) +
@@ -59,9 +59,14 @@ ggplot() +
                        na.value = "white",
                        name = 'Habitat condition value', 
                        limits=c(0,1)) 
+
+ggsave('Figure1_Hardeveld_condition.png', gg_arch_hveld, dpi=600,
+       width = 16, height = 16, units='cm')
 ```
 
-Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.
+![Figure 1. Habitat condition archetype map for the Hardeveld. A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure1_Hardeveld_condition.png)
+
+
 
 Bell et al. (2021) further calculated what they termed "potential desertification classes" based on how many standard deviations archetype values were away from the mean archetype value for the study region. These can be thought of as "degradation" classes.
 
@@ -92,7 +97,8 @@ arch_hveld_classes <- classify(arch_hveld, reclass_matrix, include.lowest = T,
 arch_hveld_class_dat = arch_hveld_classes %>% as.data.frame(xy = TRUE)
 
 # Plot
-ggplot() +
+gg_arch_hveld_class = 
+  ggplot() +
     geom_raster(data = arch_hveld_class_dat,
                 aes(x = x, y = y, fill = as.factor(condition))) +
     coord_sf(crs = st_crs(4326)) +
@@ -122,14 +128,16 @@ ggplot() +
           legend.title = element_text(size = 6),
           legend.ticks = element_blank(),
           panel.spacing = unit(0, "cm")) + 
-  scale_fill_manual(values = rev(c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e')),
-                    labels = rev(c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average')),
+  scale_fill_manual(values = c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'),
+                    labels = c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average'),
                        na.value = "white",
                        name = 'Habitat condition class') 
 
+ggsave('Figure2_Hardeveld_condition_classes.png', gg_arch_hveld_class, dpi=600,
+       width = 16, height = 16, units='cm')
 ```
+![Figure 2. Potential desertification classes for the Hardeveld.](Figure2_Hardeveld_condition_classes.png)
 
-Figure 2. Potential desertification classes for the Hardeveld.
 
 # Little Karoo condition map
 
@@ -145,7 +153,8 @@ names(arch_lkaroo) = 'condition' #Rename variable for ggplot
 arch_lkaroo_dat = arch_lkaroo %>% as.data.frame(xy = TRUE)
 
 # Plot map
-ggplot() +
+gg_arch_lkaroo = 
+  ggplot() +
     geom_raster(data = arch_lkaroo_dat,
                 aes(x = x, y = y, fill = condition)) +
     coord_sf(crs = st_crs(4326)) +
@@ -180,9 +189,12 @@ ggplot() +
                        na.value = "white",
                        name = 'Habitat condition value', 
                        limits=c(0,1)) 
-```
 
-Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.
+ggsave('Figure3_LittleKaroo_condition.png', gg_arch_lkaroo, dpi=600,
+       width = 16, height = 16, units='cm')
+```
+![Figure 3. Habitat condition archetype map for the Little Karoo A value of one represents 100% similarity to the non-degraded extreme of the habitat condition archetype while a value of zero represents 100% similarity to the degraded extreme.](Figure3_LittleKaroo_condition.png)
+
 
 We can then use the approach suggested by Bell et al. (2021) to derive "potential desertification classes".
 
@@ -213,7 +225,8 @@ arch_lk_classes <- classify(arch_lkaroo, reclass_matrix_lk, include.lowest = T,
 arch_lk_class_dat = arch_lk_classes %>% as.data.frame(xy = TRUE)
 
 # Plot
-ggplot() +
+gg_arch_lk_class = 
+  ggplot() +
     geom_raster(data = arch_lk_class_dat,
                 aes(x = x, y = y, fill = as.factor(condition))) +
     coord_sf(crs = st_crs(4326)) +
@@ -243,14 +256,16 @@ ggplot() +
           legend.title = element_text(size = 6),
           legend.ticks = element_blank(),
           panel.spacing = unit(0, "cm")) + 
-  scale_fill_manual(values = rev(c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e')),
-                    labels = rev(c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average')),
+  scale_fill_manual(breaks = c(as.factor(1:6)),
+                    values = c('#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'),
+                    labels = c('Well below average','Moderately below average','Slightly below average','Slightly above average','Moderately above average','Well above average'),
                        na.value = "white",
                        name = 'Habitat condition class') 
 
+ggsave('Figure4_LittleKaroo_condition_classes.png', gg_arch_lk_class, dpi=600,
+       width = 16, height = 16, units='cm')
 ```
-
-Figure 4. Potential desertification classes for the Little Karoo.
+![Figure 4. Potential desertification classes for the Little Karoo.](Figure4_LittleKaroo_condition_classes.png)
 
 
 # License
